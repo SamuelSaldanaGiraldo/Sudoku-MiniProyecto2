@@ -69,8 +69,28 @@
     -fx-background-size: cover;
 }
 
+.background2 {
+    -fx-background-image: url("background2.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.background3 {
+    -fx-background-image: url("background3.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
 .button:hover {
     -fx-background-color: rgba(255, 255, 255, 0);
     -fx-effect: dropshadow(gaussian, rgba(61, 213, 195, 0.81),20,0.6,0,0);
+}
+
+.grid-style {
+    -fx-background-image: url("sudokuBackground.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+
 }
 
