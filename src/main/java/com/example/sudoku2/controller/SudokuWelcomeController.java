@@ -1,0 +1,44 @@
+package com.example.sudoku2.controller;
+
+import com.example.sudoku2.model.game.Game;
+import com.example.sudoku2.model.user.User;
+import com.example.sudoku2.view.SudokuGameStage;
+import com.example.sudoku2.view.SudokuHelpStage;
+import com.example.sudoku2.view.SudokuWelcomeStage;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
+
+
+public class SudokuWelcomeController {
+    @FXML
+    private TextField nicknameTxt;
+
+    @FXML
+    void handlePlay(ActionEvent event){
+        String nickname = nicknameTxt.getText().trim();
+        try {
+            if (!nickname.equals("")) {
+                SudokuGameStage.getInstance().getController().setUser(new User(nickname));
+                SudokuWelcomeStage.deleteInstance();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void handleLeave(ActionEvent event){
+        SudokuWelcomeStage.deleteInstance();
+    }
+    @FXML
+    void handleHelp(ActionEvent event){
+        try{
+            SudokuHelpStage.getInstance();
+            SudokuWelcomeStage.deleteInstance();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+}

@@ -1,0 +1,76 @@
+
+.my-button {
+    -fx-background-image: url("button2.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.my-button2 {
+    -fx-background-image: url("exit.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.my-button3 {
+    -fx-background-image: url("ayuda.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.my-button4 {
+    -fx-background-image: url("solution.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.my-button5 {
+    -fx-background-image: url("back.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-field{
+    -fx-background-color: #fff8cd;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill: #56b5c1;
+    -fx-text-origin: 20;
+}
+
+.background {
+    -fx-background-image: url("background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0);
+    -fx-effect: dropshadow(gaussian, rgba(61, 213, 195, 0.81),20,0.6,0,0);
+}
+
