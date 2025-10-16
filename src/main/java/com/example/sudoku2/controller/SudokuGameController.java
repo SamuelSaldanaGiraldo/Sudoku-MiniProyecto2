@@ -4,11 +4,15 @@ import com.example.sudoku2.model.game.Game;
 import com.example.sudoku2.model.game.GameAdapter;
 import com.example.sudoku2.model.game.IGame;
 import com.example.sudoku2.model.user.User;
+import com.example.sudoku2.view.SudokuFinalStage;
 import com.example.sudoku2.view.SudokuGameStage;
 import com.example.sudoku2.view.SudokuWelcomeStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -18,37 +22,61 @@ import java.util.ResourceBundle;
 
 
 /**
- * Controller for the main Sudoku game view (sudoku-game-view.fxml).
- * This class is responsible for initializing and managing the game board's UI.
+ * Controller class for the main Sudoku game view (sudoku-game-view.fxml).
+ * <p>
+ * This controller manages the game screen, initializes the Sudoku board,
+ * handles user interactions such as requesting help or returning to the
+ * welcome screen, and displays the current player's nickname.
+ * </p>
  */
 public class SudokuGameController implements Initializable {
 
     /**
-     * The GridPane element from the FXML file that holds the Sudoku board cells.
+     * The {@link GridPane} representing the visual Sudoku board where cells are displayed.
      */
     @FXML
     private GridPane boardGridPane;
 
+    /**
+     * Displays the nickname of the user currently playing.
+     */
+    @FXML
+    private Label nicknameTxt;
+
+
+    /**
+     * Interface for game logic handling. Uses an adapter to connect UI and logic.
+     */
     private IGame game;
-    private Game.SuggestionEngine suggestionEngine;
+
+    /**
+     * The current user playing the game.
+     */
     private User user;
 
     /**
-     * Initializes the controller class. This method is automatically called
-     * after the FXML file has been loaded. It creates a new game instance
-     * and starts the game.
+     * Initializes the Sudoku game screen. It creates a new game instance,
+     * loads the initial board, and shows the player's nickname if available.
      *
-     * @param url            The location used to resolve relative paths for the root object, or null if the location is not known.
-     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     * @param url            URL to locate the FXML file, not used here.
+     * @param resourceBundle Resource bundle for localization, not used here.
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         game = new GameAdapter(boardGridPane);
         game.startGame();
+        if (user != null) {
+            nicknameTxt.setText("Waiting... " + user.getNickname());
+        }
     }
 
+    /**
+     * Handles the action of returning to the welcome screen.
+     *
+     * @param event Button click event fired by the "Back" button.
+     */
     @FXML
-    void handleBack(ActionEvent event){
+    void handleBack(ActionEvent event) {
         try {
             SudokuWelcomeStage.getInstance();
             SudokuGameStage.deleteInstance();
@@ -57,13 +85,18 @@ public class SudokuGameController implements Initializable {
         }
     }
 
+    /**
+     * Handles the help button click event. Requests a safe suggestion
+     * from the suggestion engine and applies it to the board if possible.
+     * The suggested number is visually highlighted and made uneditable.
+     */
     public void onHelpButtonClicked() {
         Game.SuggestionEngine engine = game.getSuggestionEngine();
 
         // pedir sugerencia
         int[] sug = engine.getSafeSuggestion();
         if (sug == null) {
-            System.out.println("No hay sugerencias disponibles");
+            System.out.println("No suggestions");
         } else {
             // aplicar a modelo (board) y bloquearla
             boolean applied = engine.applySuggestionToBoard(sug);
@@ -83,12 +116,53 @@ public class SudokuGameController implements Initializable {
     }
 
     /**
-     * Sets the user for the current game session. This method is called by the
-     * welcome controller to pass the user's data.
+     * Checks if the Sudoku game has been completed.
+     * <p>
+     * If the board is complete, it calls {@link #endGame()} to handle
+     * the end-of-game logic. Otherwise, it prints a message indicating
+     * that the board is not yet complete.
+     * </p>
+     */
+    @FXML
+    private void checkIfGameFinished() {
+        if (game.isBoardComplete()) {
+            endGame();
+        } else {
+            System.out.println("The board is not complete.");
+        }
+    }
+
+    /**
+     * Handles the end-of-game logic when the Sudoku board is complete.
+     * <p>
+     * This method prints a confirmation message, opens the final game stage
+     * via {@link SudokuFinalStage#getInstance()}, and deletes the current
+     * game stage instance using {@link SudokuGameStage#deleteInstance()}.
+     * Any {@link IOException} encountered during this process is caught
+     * and its stack trace is printed.
+     * </p>
+     */
+    @FXML
+    private void endGame()  {
+        System.out.println("The board is complete.");
+        try {
+            SudokuFinalStage.getInstance();
+            SudokuGameStage.deleteInstance();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets the user for the current session and updates the nickname label in the UI.
      *
-     * @param user The user object containing player information, such as the nickname.
+     * @param user The {@link User} object representing the current player.
      */
     public void setUser(User user) {
         this.user = user;
+        if (nicknameTxt != null && user != null) {
+            nicknameTxt.setText("Waiting... " + user.getNickname());
+        }
     }
 }

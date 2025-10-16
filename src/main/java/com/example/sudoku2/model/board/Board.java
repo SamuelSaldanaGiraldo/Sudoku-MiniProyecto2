@@ -3,15 +3,21 @@ package com.example.sudoku2.model.board;
 import java.util.*;
 
 /**
- * This class generates a 6x6 board divided into 2x3 blocks.
- * In each 2x3 block exactly one cell is assigned a random number (from 1 to 6),
- * and all the other cells are left as 0. Additionally, the placed number is not repeated
- * in any row or column across the entire board.
+ * Represents a 6x6 Sudoku board divided into 2x3 blocks.
  * <p>
- * The board is represented as a list of lists (ArrayLists) rather than using arrays,
- * and the board is generated using a backtracking algorithm that works block by block.
+ * Each 2x3 block contains exactly two pre-filled numbers (from 1 to 6) placed randomly
+ * such that no number is repeated in any row, column, or block across the board.
+ * Empty cells are represented with 0. The board is internally represented as a
+ * {@link List} of {@link List} of {@link Integer}.
+ * </p>
+ * <p>
+ * The board generation uses a backtracking algorithm that fills the board block by block
+ * and ensures a unique solution. Locked cells are those that were pre-filled and cannot
+ * be changed during gameplay.
+ * </p>
  * <p>
  * Java JDK 17.
+ * </p>
  */
 public class Board implements IBoard {
     // Board dimensions and block dimensions.
@@ -34,8 +40,10 @@ public class Board implements IBoard {
 
     // Limit of attempts to create a board
     private final int MAX_GENERATION_ATTEMPTS = 2000;
+
     /**
-     * Constructor initializes the board with zeros and then fills each block with one number.
+     * Constructs a new Board object, initializing all cells to 0 and generating
+     * a board with two pre-filled numbers per 2x3 block.
      */
     public Board() {
         board = new ArrayList<>();
@@ -49,6 +57,13 @@ public class Board implements IBoard {
         regenerateBoard();
     }
 
+    /**
+     * Regenerates the board until a valid board with a unique solution is found.
+     * <p>
+     * This method attempts up to {@link #MAX_GENERATION_ATTEMPTS} times. If a unique
+     * solution cannot be generated, it keeps the last generated board and logs a warning.
+     * </p>
+     */
     public void regenerateBoard() {
         int attempts = 0;
         boolean success = false;
@@ -58,40 +73,32 @@ public class Board implements IBoard {
             cleanBoard();
             lockedCells.clear();
 
-            // LLenar 2 por bloque (aleatorio)
             if (!fillBlocksRandomTwoPerBlock()) {
-                // Si algo raro pasa (aunque la implementación no devuelve false), volvemos a intentar
                 continue;
             }
 
-            // Marcar las celdas no nulas como bloqueadas (iniciales)
             markInitialLockedCells();
 
-            // Verificar unicidad de solución
             if (hasUniqueSolution()) {
                 success = true;
                 break;
             } else {
-                // Si no es única, continuar intentando
-                // (limpiarTablero ya se hará al inicio del siguiente ciclo)
+
             }
         }
 
-        // Si no encontró único en MAX attempts, dejamos el último generado (mejor que bloquear).
-        // Puedes loggear attempts para debug.
         if (!success) {
             System.out.println("Warning: couldn't generate unique-solution board in " + MAX_GENERATION_ATTEMPTS + " attempts. Using last generated board.");
         }
     }
 
     /**
-     * Recursively fills each 2x3 block with one number.
+     * Fills each 2x3 block with two valid numbers randomly, ensuring no duplicates
+     * in rows, columns, or blocks.
      *
-     * @param blockIndex the index of the current block (ranging from 0 to TOTAL_BLOCKS - 1).
-     * @return true if all blocks have been successfully filled; false otherwise.
+     * @return true if all blocks were successfully filled; false otherwise
      */
     public boolean fillBlocksRandomTwoPerBlock() {
-        // Recorre bloques (blockIndex 0..5)
         for (int blockIndex = 0; blockIndex < TOTAL_BLOCKS; blockIndex++) {
             int blockRow = blockIndex / TOTAL_BLOCK_COLS;
             int blockCol = blockIndex % TOTAL_BLOCK_COLS;
@@ -101,7 +108,7 @@ public class Board implements IBoard {
 
             int filled = 0;
             int innerAttempts = 0;
-            // Para evitar quedarse colgado dentro de un bloque, limitamos intentos internos
+
             int maxInnerAttempts = 200;
 
             while (filled < 2 && innerAttempts < maxInnerAttempts) {
@@ -112,7 +119,6 @@ public class Board implements IBoard {
 
                 if (board.get(r).get(c) != 0) continue; // ya ocupado
 
-                // Generamos lista de números del 1 al 6 en orden aleatorio para intentar
                 List<Integer> nums = new ArrayList<>();
                 for (int n = 1; n <= SIZE; n++) nums.add(n);
                 Collections.shuffle(nums, random);
@@ -127,19 +133,18 @@ public class Board implements IBoard {
                     }
                 }
 
-                // Si no se colocó, probamos otra posición; si no encontramos en maxInnerAttempts,
-                // salimos y dejamos que la generación global vuelva a intentarlo.
             }
 
             if (filled < 2) {
-                // No se pudo llenar este bloque con 2 números válidos dentro de los intentos,
-                // devolvemos false para forzar regeneración desde regenerateBoard.
-                return false;
+                return false; // Failed to fill block
             }
         }
         return true;
     }
 
+    /**
+     * Marks all non-zero cells as locked (initial) cells.
+     */
     private void markInitialLockedCells() {
         lockedCells.clear();
         for (int r = 0; r < SIZE; r++) {
@@ -152,12 +157,13 @@ public class Board implements IBoard {
     }
 
     /**
-     * Checks whether placing a candidate number at cell (row, col) violates the row or column uniqueness.
+     * Checks if a number can be placed at a given cell without violating
+     * Sudoku rules (row, column, and block uniqueness).
      *
-     * @param row       the row index.
-     * @param col       the column index.
-     * @param candidate the number to place (from 1 to 6).
-     * @return true if the candidate can be placed without conflict; false otherwise.
+     * @param row       the row index
+     * @param col       the column index
+     * @param candidate the number to place
+     * @return true if the placement is valid; false otherwise
      */
     @Override
     public boolean isValid(int row, int col, int candidate) {
@@ -187,22 +193,35 @@ public class Board implements IBoard {
         return true;
     }
 
+    /**
+     * Generates a key string for a cell in the format "row,col".
+     */
     private String key(int row, int col) {
         return row + "," + col;
     }
 
+    /**
+     * Locks a specific cell so it cannot be modified.
+     */
     public void lockCell(int row, int col) {
         lockedCells.add(key(row, col));
     }
 
+    /**
+     * Unlocks a specific cell.
+     */
     public void unlockCell(int row, int col) {
         lockedCells.remove(key(row, col));
     }
 
+    /**
+     * Checks whether a cell is locked (pre-filled).
+     */
     public boolean isCellLocked(int row, int col) {
         return lockedCells.contains(key(row, col));
     }
 
+    /** Unlocks all empty cells (cells with value 0). */
     public void unlockEmptyCells() {
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 6; col++) {
@@ -214,6 +233,7 @@ public class Board implements IBoard {
         }
     }
 
+    /** Sets all cells to 0 and clears all locked cells. */
     public void cleanBoard() {
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board.get(i).size(); j++) {
@@ -223,6 +243,11 @@ public class Board implements IBoard {
         lockedCells.clear();
     }
 
+    /**
+     * Checks whether the board has a unique solution.
+     *
+     * @return true if there is exactly one solution; false otherwise
+     */
     public boolean hasUniqueSolution() {
         int[] count = {0};
         // Hacemos una copia temporal del tablero? No es necesario porque el backtracking restaura.
@@ -231,11 +256,14 @@ public class Board implements IBoard {
     }
 
     /**
-     * Backtracking que cuenta soluciones. Devuelve true si debe parar pronto (cuando count>1).
-     * count es un array de tamaño 1 para pasar por referencia.
+     * Backtracking helper method that counts the number of solutions.
+     * Stops early if more than one solution is found.
+     *
+     * @param count an array of size 1 used to store the number of solutions
+     * @return true if more than one solution is found (stop recursion); false otherwise
      */
     private boolean solveAndCount(int[] count) {
-        if (count[0] > 1) return true; // ya encontramos más de una
+        if (count[0] > 1) return true; // found more than one
         for (int r = 0; r < SIZE; r++) {
             for (int c = 0; c < SIZE; c++) {
                 if (board.get(r).get(c) == 0) {
@@ -247,12 +275,10 @@ public class Board implements IBoard {
                             if (stop) return true;
                         }
                     }
-                    // Si no hay número válido aquí, se retrocede (sin incrementar count)
                     return false;
                 }
             }
         }
-        // Si llegamos aquí, no hay celdas vacías: encontramos una solución completa
         count[0]++;
         return count[0] > 1;
     }

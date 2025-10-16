@@ -15,7 +15,7 @@
     <children>
         <Pane prefHeight="62.0" prefWidth="600.0" style="-fx-background-color: #4BA2AC;">
             <children>
-                <Label layoutX="216.0" layoutY="19.0" text="Esperando accion..." textFill="#0d6f68">
+                <Label fx:id="nicknameTxt" layoutX="216.0" layoutY="19.0" text="Esperando accion..." textFill="#0d6f68">
                     <font>
                         <Font size="18.0" />
                     </font>
@@ -228,6 +228,7 @@
                                 </TextField>
                             </children>
                         </GridPane>
+                  <Button fx:id="checkButton" layoutX="510.0" layoutY="277.0" mnemonicParsing="false" onMouseClicked="#checkIfGameFinished" prefHeight="41.0" prefWidth="65.0" styleClass="my-button6" />
                     </children>
                 </Pane>
             </children>

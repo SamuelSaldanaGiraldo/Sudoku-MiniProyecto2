@@ -3,6 +3,7 @@ module com.example.sudoku2 {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.base;
+    requires java.desktop;
 
 
     opens com.example.sudoku2 to javafx.fxml;

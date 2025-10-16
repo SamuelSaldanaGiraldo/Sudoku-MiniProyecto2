@@ -11,11 +11,26 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-
+/**
+ * Controller class for the Sudoku welcome screen. Handles user interaction
+ * for starting the game, exiting the application, and accessing the help view.
+ */
 public class SudokuWelcomeController {
+    /**
+     * TextField where the user enters their nickname before starting the game.
+     */
     @FXML
     private TextField nicknameTxt;
 
+    /**
+     * Handles the action of pressing the "Play" button.
+     * <p>
+     * Validates the nickname entered by the user and, if valid,
+     * initializes the game stage and sets the current user.
+     * </p>
+     *
+     * @param event the ActionEvent triggered by clicking the play button.
+     */
     @FXML
     void handlePlay(ActionEvent event){
         String nickname = nicknameTxt.getText().trim();
@@ -28,10 +43,28 @@ public class SudokuWelcomeController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Handles the action of pressing the "Leave" button.
+     * <p>
+     * Closes the welcome stage and exits the application.
+     * </p>
+     *
+     * @param event the ActionEvent triggered by clicking the leave button.
+     */
     @FXML
     void handleLeave(ActionEvent event){
         SudokuWelcomeStage.deleteInstance();
     }
+
+    /**
+     * Handles the action of pressing the "Help" button.
+     * <p>
+     * Opens the help screen and closes the welcome screen.
+     * </p>
+     *
+     * @param event the ActionEvent triggered by clicking the help button.
+     */
     @FXML
     void handleHelp(ActionEvent event){
         try{
