@@ -1,6 +1,8 @@
 package com.example.sudoku2.controller;
 
 import com.example.sudoku2.model.game.Game;
+import com.example.sudoku2.model.game.GameAdapter;
+import com.example.sudoku2.model.game.IGame;
 import com.example.sudoku2.model.user.User;
 import com.example.sudoku2.view.SudokuGameStage;
 import com.example.sudoku2.view.SudokuWelcomeStage;
@@ -27,7 +29,7 @@ public class SudokuGameController implements Initializable {
     @FXML
     private GridPane boardGridPane;
 
-    private Game game;
+    private IGame game;
     private Game.SuggestionEngine suggestionEngine;
     private User user;
 
@@ -41,8 +43,7 @@ public class SudokuGameController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        game = new Game(boardGridPane);
-        Game.SuggestionEngine engine = game.getSuggestionEngine();
+        game = new GameAdapter(boardGridPane);
         game.startGame();
     }
 
@@ -71,7 +72,7 @@ public class SudokuGameController implements Initializable {
                 TextField tf = game.getTextFieldAt(sug[0], sug[1]); // tu helper existente
                 if (tf != null) {
                     tf.setText(String.valueOf(sug[2]));
-                    tf.setStyle("-fx-background-color: yellow; -fx-font-weight: bold;");
+                    tf.setStyle("-fx-text-fill: #ffb62d; -fx-font-weight: bold;");
                     tf.setEditable(false); // opcional: si quieres que quede no editable
                 }
             } else {

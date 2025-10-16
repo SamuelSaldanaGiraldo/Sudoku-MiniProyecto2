@@ -56,15 +56,31 @@
 }
 
 .text-field{
-    -fx-background-color: #fff8cd;
+    -fx-background-color: transparent;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
     -fx-text-fill: #56b5c1;
     -fx-text-origin: 20;
 }
 
+.menu {
+    -fx-background-color: #fff8cd;
+}
+
 .background {
     -fx-background-image: url("background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.background2 {
+    -fx-background-image: url("background2.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.background3 {
+    -fx-background-image: url("background3.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
 }
@@ -74,3 +90,10 @@
     -fx-effect: dropshadow(gaussian, rgba(61, 213, 195, 0.81),20,0.6,0,0);
 }
 
+.grid-style {
+    -fx-background-image: url("sudokuBackground.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
+
+}

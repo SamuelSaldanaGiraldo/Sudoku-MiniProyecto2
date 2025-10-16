@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -19,7 +20,7 @@
                   <Image url="@../images/logo.png" />
                </image>
             </ImageView>
-            <TextField fx:id="nicknameTxt" alignment="CENTER" layoutX="221.0" layoutY="257.0" prefHeight="28.0" prefWidth="159.0" text="samuel">
+            <TextField fx:id="nicknameTxt" alignment="CENTER" layoutX="221.0" layoutY="257.0" prefHeight="28.0" prefWidth="159.0">
                <effect>
                   <InnerShadow height="27.83" radius="13.92" width="29.85">
                      <color>
@@ -29,7 +30,11 @@
                </effect>
                <font>
                   <Font name="System Bold" size="18.0" />
-               </font></TextField>
+               </font>
+               <styleClass>
+                  <String fx:value="menu" />
+                  <String fx:value="text-field" />
+               </styleClass></TextField>
          </children>
       </Pane>
       <Pane prefHeight="108.0" prefWidth="600.0">

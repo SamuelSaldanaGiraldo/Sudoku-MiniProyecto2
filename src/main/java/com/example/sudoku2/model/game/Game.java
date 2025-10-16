@@ -1,23 +1,22 @@
 package com.example.sudoku2.model.game;
 
+import com.example.sudoku2.utils.AlertBox;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Represents the concrete implementation of the Sudoku game logic.
  * This class is responsible for setting up the game board UI and handling user input.
  */
 public class Game extends GameAbstract {
-    private Set<String> lockedCells = new HashSet<>();
+    private AlertBox alertBox;
     /**
      * Constructs a new Game instance.
      *
@@ -33,6 +32,7 @@ public class Game extends GameAbstract {
      */
     @Override
     public void startGame() {
+        alertBox = new AlertBox();
         for (int i = 0; i < board.getBoard().size(); i++) {
             for (int j = 0; j < board.getBoard().get(i).size(); j++) {
                 int number = board.getBoard().get(i).get(j);
@@ -66,6 +66,13 @@ public class Game extends GameAbstract {
             textField.setStyle("-fx-text-fill: #56b5c1");
             String input = txt.getText().trim();
             if(!input.isEmpty()){
+                if (!validateInput(input)) {
+                    textField.setText("");
+                    alertBox.showAlert("Input error",
+                            "Please enter a number between 1 and 6",
+                            ERROR);
+                }
+
                 boolean result = board.isValid(row, col, Integer.parseInt(input));
                 board.lockCell(row, col);
                 if(!result){
@@ -74,6 +81,10 @@ public class Game extends GameAbstract {
             }
         });
         board.unlockEmptyCells();
+    }
+
+    private boolean validateInput(String input) {
+        return input.matches("[1-6]");
     }
 
     public TextField getTextFieldAt(int row, int col) {
