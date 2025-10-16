@@ -1,4 +1,4 @@
-# 🎮 Sudoku: Aventura de Tinta
+# 🎮 Sudoku
 
 <div align="center">
   
