@@ -79,6 +79,18 @@
     -fx-faint-focus-color: transparent;
 }
 
+.my-button6 {
+    -fx-background-image: url("backToMenu.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: transparent;
+
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
 .text-field{
     -fx-background-color: transparent;
     -fx-background-radius: 20;
